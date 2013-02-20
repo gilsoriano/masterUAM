@@ -1,0 +1,261 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass[a4paper,11pt]{article}
+\usepackage[pdfborder= 0 0 0 1]{hyperref}
+\usepackage{graphicx}
+\usepackage{appendix}
+\usepackage{tabularx}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[spanish]{babel}
+\usepackage{listings}
+\usepackage{amsmath}
+\definecolor{light-gray}{gray}{0.9}
+\definecolor{dark-gray}{gray}{0.375}
+\lstset{ %
+   language=Matlab,                % choose the language of the code
+   basicstyle=\scriptsize,       % the size of the fonts that are used for the
+   numbers=left,                   % where to put the line-numbers
+   numberstyle=\tiny\color{dark-gray},      % the size of the fonts that are used for the
+   stepnumber=1,                   % the step between two line-numbers. If it is
+   numbersep=5pt,                  % how far the line-numbers are from the code
+   backgroundcolor=\color{light-gray},  % choose the background color. You must add
+   showspaces=false,               % show spaces adding particular underscores
+   showstringspaces=false,         % underline spaces within strings
+   showtabs=false,                 % show tabs within strings adding particular
+   flexiblecolumns=false,
+   frame=single,                   % adds a frame around the code
+   captionpos=b,                   % sets the caption-position to bottom
+   breaklines=true,                % sets automatic line breaking
+   breakatwhitespace=false,        % sets if automatic breaks should only happen at
+   escapeinside={\%*}{*)}
+}
+%%\usepackage{draftwatermark}
+%%\SetWatermarkLightness{0.9}
+%%\SetWatermarkScale{5}
+\begin{document}
+
+\selectlanguage{spanish}
+
+\title{\textbf{{\LARGE TIP ejercicio 1 \\ curso 2012/2013}}}
+\author{Carlos Gil Soriano\\UAM-HPCN\\
+\hypersetup{
+  colorlinks   =  true,
+  urlcolor     =  blue
+  pdftitle     = {TIP ejercicio 1 \\ curso 2012/2013},
+  pdfauthor    = {Carlos Gil Soriano},
+  pdfsubject   = {TIP exercise 1, course 2012/2013},
+  pdfkeywords  = {Euler, SDF, Brownian, Newton-Rhapson, quadrature, Normal pdf}
+}
+\href{mailto:gilsoriano@gmail.com}{\textbf{\textit{gilsoriano@gmail.com}}}}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+\begin{figure}[htb]
+   \begin{center}
+      \includegraphics[scale=1,
+      keepaspectratio]{../../../../../figures/logo/logo-uam.jpg}
+   \end{center}
+\end{figure}
+
+\begin{abstract}
+
+   En esta primera entrega de ejercicios se tratan tres problemas que se centran
+   en:
+   \begin{itemize}
+      \item Comparaci\'on del c\'alculo de  momentos de orden n mediante
+         \textit{cuadraturas} con su correspondiente por \textit{Montecarlo}.
+      \item Propiedades del \textit{Browniano aritm\'etico}.
+      \item Propiedades del \textit{Browniano geom\'etrico}.
+   \end{itemize}
+
+\end{abstract}
+
+\vspace{2cm}
+\begin{center}
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Historial}}\\
+\hline
+\hline
+\textbf{Versi\'on} & \textbf{Estado} & \textbf{Fecha}\\
+\hline
+0.1 & Problema 1 resuelto & 18 de febrero de 2013\\
+\hline
+0.1 & Problema 2 resuelto & 19 de febrero de 2013\\
+\hline
+0.1 & Problema 3 resuelto & 20 de febrero de 2013\\
+\hline
+\end{tabular}
+\end{center}
+
+\pagebreak
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+\pagebreak
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\pagebreak
+\listoftables
+\listoffigures
+\lstlistoflistings
+\pagebreak
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\pagebreak
+\section{C\'alculo de momentos centrales}
+
+Se define un momento central de orden n como:\\
+\begin{equation*}
+   \mu_n = E [(X- E[X])^n] = \int_{-\infty}^\infty (x - \mu)^n pdf(x)\mathrm{d}x
+\end{equation*}
+
+Para realizar la cuadratura debemos identificar la funci\'on $g(x)$ a
+integrar:\\
+\begin{equation*}
+   I = \int_{-\infty}^\infty g(x)\mathrm{d}x
+\end{equation*}
+
+En nuestro caso se trata de:\\
+\begin{equation*}
+   g(x) = (x - \mu)^n pdf(x)
+\end{equation*}
+
+Esta funci\'on g(x) se ha definido en Matlab en la funci\'on
+\hyperref[quadfunc]{\textit{quadfunction.m}}. La integraci\'on por cuadratura de
+Lobatto (cuadratura gaussiana con peso constante de 1) se realiza en Matlab por
+medio del comando \textit{quadl}. El c\'odigo del c\'alculo de
+$N(\mu, \sigma)$ se encuentra en
+\hyperref[centralMomentQuad]{\textit{centralMomentGaussian.m}}.
+%\begin{center}
+%\begin{tabularx}{\textwidth}{|X|}
+%\hline
+%It is recommended to take a look to the I2C standard before continue reading.\\
+%\hline
+%\end{tabularx}
+%\end{center}
+
+\subsection{Salidad del programa y evaluaci\'on}
+
+\begin{lstlisting}
+>> mu = 0; sigma = 1;
+   N = 8;
+   for n = 1:N;
+   moment(n) = centralMomentGaussian(mu,sigma,n);
+   end
+   moment
+
+moment =
+4.0305e-22
+
+moment =
+1.0000
+
+moment =
+4.0305e-20
+
+moment =
+3.0000
+
+moment =
+4.0305e-18
+
+moment =
+15.0000
+
+moment =
+-4.1039e-17
+
+moment =
+105.0000
+
+moment =
+0.000   1.000   0.000   3.000   0.000   15.000   -0.000   105.000
+\end{lstlisting}
+
+Se observa que el primer y segundo momento ofrecen los valores esperados de cero y
+varianza, respectivamente. Adem\'as, dada la simetr\'ia de la funci\'on a
+integrar, g(x), y la simetr\'ia del dominio de integraci\'on, se comprueba que
+los momentos de orden impar se anulan.
+
+\subsection{Comparaci\'on con estimaci\'on por Montecarlo}
+La simulaci\'on por el m\'etodo de Montecarlo ofrece unos resultados similares:
+\begin{itemize}
+   \item El histograma de los momentos de orden impar se concentra sobre cero.
+   \item El histograma de momentos de orden 2, se concentra sobre la varianza.
+\end{itemize}
+
+\pagebreak
+\section{Propiedades browniano aritm\'etico}
+El \textbf{browniano aritm\'etico}, tambi\'en llamado proceso de Wiener con deriva $\mu$ y
+varianza $\sigma^2$, es de la forma:
+
+\begin{equation*}
+   \tag{\textbf{ABM}}
+   \mathrm{d}S_t = \mu\mathrm{d}t + \sigma\mathrm{d}W_t
+\end{equation*}
+
+Se muestra tambi\'en el \textbf{browniano geom\'etrico}, para ver las diferencias
+existentes en la formaci\'on de la ecuaci\'on diferencial estoc\'astica:
+
+\begin{equation*}
+   \tag{\textbf{GBM}}
+   \frac{\mathrm{d}S_t}{S_t} = \mu\mathrm{d}t + \sigma\mathrm{d}W_t
+\end{equation*}
+
+\subsection{Distribuci\'on del browniano aritm\'etico}
+
+El browniano aritm\'etico se caracteriza por:
+
+\begin{equation*}
+   \tag{Media}
+   \mathrm{E}[S(t)] = S_0 + \mu t
+\end{equation*}
+
+\begin{equation*}
+   \tag{Varianza}
+   \mathrm{E}[S(t)] = \sigma^2 t
+\end{equation*}
+
+Por lo tanto, en la gr\'afica debemos observar una tendencia ascendente junto con
+una desviaci\'on parab\'olica de las diferentes trayectorias del browniano:\\
+
+\begin{figure}[htb]
+   \begin{center}
+      \includegraphics[scale=0.5,
+      keepaspectratio]{./figures/ABM.png}
+   \end{center}
+   \caption{Browniano aritm\'etico}
+\end{figure}
+
+\subsection{Diagrama de autocovarianzas}
+
+Por la definici\'on de autocovarianza:\\
+
+\begin{equation*}
+   \mathrm{C}_{SS}(t,s) = \mathrm{E}[(S(t)-\mathrm{E}[S(t)])(S(s)-\mathrm{E}[S(s)])]
+\end{equation*}
+
+donde si $t = s$ la autocovarianza la varianza, que ya conocemos a priori por los
+resultados de la secci\'on anterior y servir\'a para comprobar si los resultados
+tienen (algo) de sentido.
+
+
+\pagebreak
+\section{Valoraci\'on de productos derivados}
+
+\pagebreak
+\appendix
+  \section{centralMomentGaussian.m}
+
+  \lstinputlisting[caption={centralMomentGaussian.m},
+  label={centralMomentQuad}]{../matlab/exercise1/centralMomentGaussian.m}
+  \subsection{quadfunction.m}
+  \lstinputlisting[caption={quadfunction.m}, label={quadfunc}]{../matlab/exercise1/quadfunction.m}
+
+\pagebreak
+\section{other}
+\end{document}
