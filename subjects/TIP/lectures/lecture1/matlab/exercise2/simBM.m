@@ -4,8 +4,8 @@ function Z = simBM(M,X0,N,dT,mu,sigma)
    % SYNTAX:
    %   X = simBM(M,X0,N,dT,mu,sigma)
    %
-   %   X                  : Matrix (M,(N+1)) containing M simulated trajectories,
-   %   each of length N+1
+   %   X                  : Matrix (M,(N+1)) containing M simulated
+   %                        trajectories, each of length N+1
    %   X0                 : Initial value of the simulation
    %   M                  : Number of simulated trajectory
    %   N                  : Number of steps in the simulation
@@ -24,10 +24,10 @@ Z       = zeros (M, N+1);
 X       = randn (M, N+1);
 Z(:, 1) = X0;
 for n = 1:N
-   % Here we place the geometric brownian motion
-   %Z(:, n+1) = Z(:, n)*(1+mu*dT)+Z(:, n)*(sigma*sqrt(dT)).*X(:,n);
    % And here we place the arithmetic brownian motion
    Z(:, n+1) = Z(:, n)+mu*dT+(sigma*sqrt(dT)).*X(:,n);
+   % Here we place the geometric brownian motion, as well
+   %Z(:, n+1) = Z(:, n)*(1+mu*dT)+Z(:, n)*(sigma*sqrt(dT)).*X(:,n);
 end
 x_axis = 0:dT:N*dT;
 hFig = figure(1);

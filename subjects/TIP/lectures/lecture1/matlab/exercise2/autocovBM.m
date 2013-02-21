@@ -1,5 +1,5 @@
 function [Z, meanABM_tstep0, meanABM_tsweep, sampledeviation_tstep0, sampledeviation_tsweep] = autocovBM(ABM, tstep0, tsweep0, tsweep1)
-   % autocovBM : Returns the autocovariance matrix of a Brownian Motion
+   % autocovBM : Returns the autocovariance matrix of a ABM
    %
    % SYNTAX:
    %   Z = autocovBM(BM, rows, columns);
@@ -10,27 +10,9 @@ function [Z, meanABM_tstep0, meanABM_tsweep, sampledeviation_tstep0, sampledevia
    %   tsweep1  : Upper bound time-step to perform autocovariance
    %
    % STEPS
-   %  1.- Calculate sample mean two given time-steps (tstep0 and tstep1)_
+   %  1.- Calculate sample mean two given time-steps (tstep0 and tstep1)
    %  2.- Calculate sample deviation of all the trajectories of the ABM
    %      at two given time-steps (tstep0 and tstep1)
-   %
-   %  SIMULATION PARAMETERS
-   %     M      = 500;
-   %     X0     = 0;
-   %     N      = 4e2;
-   %     dT     = 2e-2;
-   %     mu     = 10;
-   %     sigma  = 2;
-   %
-   %     tstep0  = 30;
-   %     tsweep0 = 40;
-   %     tsweep1 = 200;
-   %     for i = 1:10
-   %        BM     = simBM(M,X0,N,dT,mu,sigma);
-   %        autocov = autocovBM(BM, tstep0, tsweep0, tsweep1);
-   %        plot(autocov,'Color', rand([3,1]));
-   %        hold on;
-   %     end
    %
    % Here we calculate the sample mean at time-step tstep0 and tstep1
    [rows, columns] = size(ABM);

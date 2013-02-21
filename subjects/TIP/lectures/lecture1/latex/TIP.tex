@@ -62,10 +62,11 @@
    En esta primera entrega de ejercicios se tratan tres problemas que se centran
    en:
    \begin{itemize}
-      \item Comparaci\'on del c\'alculo de  momentos de orden n mediante
-         \textit{cuadraturas} con su correspondiente por \textit{Montecarlo}.
+      \item Comparaci\'on del c\'alculo de momentos de orden n mediante
+         \textit{cuadraturas} con su correspondiente mediante simulaci\'on por
+         \textit{Montecarlo}.
       \item Propiedades del \textit{Browniano aritm\'etico}.
-      \item Propiedades del \textit{Browniano geom\'etrico}.
+      \item Aplicaciones del \textit{Browniano geom\'etrico}.
    \end{itemize}
 
 \end{abstract}
@@ -83,11 +84,14 @@
 \hline
 0.1 & Problema 2 resuelto & 19 de febrero de 2013\\
 \hline
-0.1 & Problema 3 resuelto & 20 de febrero de 2013\\
+0.1 & Problema 3 resuelto & 21 de febrero de 2013\\
 \hline
 \end{tabular}
 \end{center}
 
+\newpage
+\mbox{}
+\thispagestyle{empty}
 \pagebreak
 
 \pagenumbering{roman}
@@ -124,7 +128,7 @@ En nuestro caso se trata de:\\
    g(x) = (x - \mu)^n pdf(x)
 \end{equation*}
 
-Esta funci\'on g(x) se ha definido en Matlab en la funci\'on
+g(x) se ha definido en Matlab en la funci\'on
 \hyperref[quadfunc]{\textit{quadfunction.m}}. La integraci\'on por cuadratura de
 Lobatto (cuadratura gaussiana con peso constante de 1) se realiza en Matlab por
 medio del comando \textit{quadl}. El c\'odigo del c\'alculo de
@@ -138,7 +142,7 @@ $N(\mu, \sigma)$ se encuentra en
 %\end{tabularx}
 %\end{center}
 
-\subsection{Salidad del programa y evaluaci\'on}
+\subsection{Salida del programa y evaluaci\'on}
 
 \begin{lstlisting}
 >> mu = 0; sigma = 1;
@@ -181,7 +185,7 @@ varianza, respectivamente. Adem\'as, dada la simetr\'ia de la funci\'on a
 integrar, g(x), y la simetr\'ia del dominio de integraci\'on, se comprueba que
 los momentos de orden impar se anulan.
 
-\subsection{Comparaci\'on con estimaci\'on por Montecarlo}
+\subsection{Comparaci\'on con simulaci\'on por Montecarlo}
 La simulaci\'on por el m\'etodo de Montecarlo ofrece unos resultados similares:
 \begin{itemize}
    \item El histograma de los momentos de orden impar se concentra sobre cero.
@@ -217,11 +221,12 @@ El browniano aritm\'etico se caracteriza por:
 
 \begin{equation*}
    \tag{Varianza}
-   \mathrm{E}[S(t)] = \sigma^2 t
+   \mathrm{E}[(S(t) - \mathrm{E}[S(t)])^2] = \sigma^2 t
 \end{equation*}
 
 Por lo tanto, en la gr\'afica debemos observar una tendencia ascendente junto con
-una desviaci\'on parab\'olica de las diferentes trayectorias del browniano:\\
+una desviaci\'on parab\'olica de las diferentes trayectorias del browniano
+aritm\'etico:\\
 
 \begin{figure}[htb]
    \begin{center}
@@ -231,6 +236,10 @@ una desviaci\'on parab\'olica de las diferentes trayectorias del browniano:\\
    \caption{Browniano aritm\'etico}
 \end{figure}
 
+\textit{\textbf{NOTA}: todas las gr\'aficas representadas en este problema han
+sido obtenidas con los par\'ametros por defecto que se especifican en los casos
+de uso de cada uno de los programas suministrados en los anexos.}
+
 \subsection{Diagrama de autocovarianzas}
 
 Por la definici\'on de autocovarianza:\\
@@ -239,23 +248,129 @@ Por la definici\'on de autocovarianza:\\
    \mathrm{C}_{SS}(t,s) = \mathrm{E}[(S(t)-\mathrm{E}[S(t)])(S(s)-\mathrm{E}[S(s)])]
 \end{equation*}
 
-donde si $t = s$ la autocovarianza la varianza, que ya conocemos a priori por los
+donde si $t = s$ la autocovarianza es la varianza, que ya conocemos a priori por los
 resultados de la secci\'on anterior y servir\'a para comprobar si los resultados
-tienen (algo) de sentido.
+tienen (algo) de sentido. Para ello comprobaremos que el segundo valor del
+vector de autocovarianzas es $\sigma^2\mathrm{d}T$.\\
 
+Adem\'as de la observaci\'on anterior, sabemos la autocovarianza del ABM:
+
+\begin{equation*}
+   \tag{Autocovarianza}
+   \mathrm{C}_{SS}(t,s) = \sigma^2 min(t,s)
+\end{equation*}
+
+luego, si $s$ es un intervalo en el que $t$ est\'a contenido, la autocovarianza
+se saturar\'a cuando $s$ sobrepase a $t$. Por ejemplo,
+la discretizaci\'on de la simulaci\'on para $n_1=30$ se corresponder\'ia con $t$ y
+$s$ estar\'ia relacionado con la discretizaciones en un intervalo de $n_2 \in [1,
+50]$.
+
+\begin{figure}[htb]
+   \begin{center}
+      \includegraphics[scale=0.5,
+      keepaspectratio]{./figures/autocovABM.png}
+   \end{center}
+   \caption{Autocovarianza para un ABM}
+\end{figure}
+
+como as\'i hemos observado en la simulaci\'on.
+
+\subsection{C\'odigo empleado}
+
+Se han codificado tres archivos en Matlab:
+\begin{itemize}
+   \item \textbf{simBM.m}\\
+      Funci\'on que calcula el browniano arim\'etico.
+   \item \textbf{autocovBM.m}\\
+      Funci\'on que calcula una matriz de autocovarianzas para un intervalo de
+      tiempo dado sobre una referencia temporal.
+   \item \textbf{plotautocovBM.m}\\
+      Peque\~no programa para dibujar de una manera m\'as clara la
+      autocovarancia calculada por medio de las simulaciones y la comparaci\'on
+      con la te\'orica.
+\end{itemize}
+
+\newpage
+\mbox{}
 
 \pagebreak
 \section{Valoraci\'on de productos derivados}
 
+\subsection{Valoraci\'on de una call europea por cuadratura}
+
+Para este problema procedemos id\'enticamente a c\'omo lo realizamos para el
+problema 1: identificamos la funci\'on a integrar y realizamos una integraci\'on
+por Lobatto.
+
+Antes de obtener el precio, que es algo inmediato, analizamos de un
+modo un tanto grosero la \textit{call} europea con los par\'ametros dados para
+su simulaci\'on.
+
+Primeramente observamos el precio del ejercicio a d\'ia de hoy que es:
+
+\begin{equation*}
+   K_{hoy} = \mathrm{e}^{-rT}K = 84.7588
+\end{equation*}
+
+Luego comparamos con el precio a d\'ia de hoy del m\'aximo, valor
+medio y m\'inimo de la evoluci\'on del subyacente por Black-Scholes:
+
+\begin{center}
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|}
+\hline
+\multicolumn{2}{|c|}{\textbf{Valor del subyacente a d\'ia de hoy}}\\
+\hline
+\hline
+\textbf{M\'aximo} & 150.0329\\
+\hline
+\textbf{Medio}    & 114.5944\\
+\hline
+\textbf{M\'inimo} & 85.2144\\
+\hline
+\end{tabular}
+\end{center}
+
+Es decir, vamos a pagar menos que el valor m\'inimo estimado, todo ello referido
+a d\'ia de hoy. Podemos pensar que va a ser una operaci\'on
+beneficiosa. Por \'ultimo, ojeamos un histograma del subyacente referido al presente. Para su
+elaboraci\'on se tomaron $10^6$ muestras de una distribuci\'on $\mathrm{N}(0,1)$:
+
+\begin{figure}[htb]
+   \begin{center}
+      \includegraphics[scale=0.5,
+      keepaspectratio]{./figures/histCallEUquad.png}
+   \end{center}
+   \caption{Evoluci\'on del subyacente referido al presente}
+\end{figure}
+
+Finalmente computamos el precio resultando 15,2187. La operaci\'on ser\'a
+beneficiosa.
+
+\subsection{Valoraci\'on de una call europea por simulaci\'on}
+
 \pagebreak
 \appendix
-  \section{centralMomentGaussian.m}
+  \section{Problema 1}
+    \subsection{centralMomentGaussian.m}
 
-  \lstinputlisting[caption={centralMomentGaussian.m},
-  label={centralMomentQuad}]{../matlab/exercise1/centralMomentGaussian.m}
-  \subsection{quadfunction.m}
-  \lstinputlisting[caption={quadfunction.m}, label={quadfunc}]{../matlab/exercise1/quadfunction.m}
+    \lstinputlisting[caption={centralMomentGaussian.m},
+    label={centralMomentQuad}]{../matlab/exercise1/centralMomentGaussian.m}
+    \subsection{quadfunction.m}
+    \lstinputlisting[caption={quadfunction.m}, label={quadfunc}]{../matlab/exercise1/quadfunction.m}
 
-\pagebreak
-\section{other}
+  \pagebreak
+  \section{Problema 2}
+    \subsection{simBM.m}
+    \lstinputlisting[caption={simBM.m},
+    label={simBM}]{../matlab/exercise2/simBM.m}
+    \subsection{autocovBM.m}
+    \lstinputlisting[caption={simBM.m},
+    label={autocovBM}]{../matlab/exercise2/autocovBM.m}
+    \subsection{plotautocovBM.m}
+    \lstinputlisting[caption={simBM.m},
+    label={plotautocovBM}]{../matlab/exercise2/plotautocovBM.m}
+
+  \pagebreak
+  \section{Problema 3}
 \end{document}
