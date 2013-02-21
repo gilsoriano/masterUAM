@@ -32,24 +32,24 @@ function graph = plotautocovBM(M,X0,N,dT,mu,sigma,tstep0, tsweep0, tsweep1, nplo
    %     nplotcov = 100;
    %
    %     plotautocovBM(M,X0,N,dT,mu,sigma,tstep0, tsweep0, tsweep1, nplotcov)
-hFig = figure(1);
-set(hFig, 'Position', [100 100 800 500], 'Color', [0.955 0.955 0.955])
-autocov = zeros(tsweep1-tsweep0+1, nplotcov);
-for i = 1:nplotcov
-   BM     = simBM(M,X0,N,dT,mu,sigma);
-   autocov(:,i) = autocovBM(BM, tstep0, tsweep0, tsweep1);
-end
-exact_autocov = zeros(tsweep1-tsweep0+1, 1);
-for i = 1:tsweep1-tsweep0+1
-   exact_autocov(i) = sigma^2*min(tstep0, i-1+tsweep0)*dT;
-end
-x_axis = tsweep0:tsweep1;
-for i = 1:nplotcov
-   plot(x_axis, autocov(:,i),'Color', rand([3,1]));
-   hold on;
-end
-exact_plot = plot(x_axis, exact_autocov, 'b', 'linewidth', 3);
-hold off;
-title('Autocovarianza ABM');
-xlabel('n2'); ylabel('Cov(X[n1]X[n2])');
-legend(exact_plot, 'Autocovarianza teórica');
+   hFig = figure(1);
+   set(hFig, 'Position', [100 100 800 500], 'Color', [0.955 0.955 0.955])
+   autocov = zeros(tsweep1-tsweep0+1, nplotcov);
+   for i = 1:nplotcov
+      BM     = simBM(M,X0,N,dT,mu,sigma);
+      autocov(:,i) = autocovBM(BM, tstep0, tsweep0, tsweep1);
+   end
+   exact_autocov = zeros(tsweep1-tsweep0+1, 1);
+   for i = 1:tsweep1-tsweep0+1
+      exact_autocov(i) = sigma^2*min(tstep0, i-1+tsweep0)*dT;
+   end
+   x_axis = tsweep0:tsweep1;
+   for i = 1:nplotcov
+      plot(x_axis, autocov(:,i),'Color', rand([3,1]));
+      hold on;
+   end
+   exact_plot = plot(x_axis, exact_autocov, 'b', 'linewidth', 3);
+   hold off;
+   title('Autocovarianza ABM');
+   xlabel('n2'); ylabel('Cov(X[n1]X[n2])');
+   legend(exact_plot, 'Autocovarianza teórica');
